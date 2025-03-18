@@ -73,7 +73,7 @@
 
                     @endforeach
                     <h3><?= $contador_de_asistencias; ?></h3>
-                    <p>Asistencias</p>
+                    <p>Marcado de Asistencias</p>
                 </div>
                 <div class="icon">
                 <i class="bi bi-clock-fill"></i>
