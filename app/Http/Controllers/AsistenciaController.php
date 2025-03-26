@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Asistencia;
 use App\Models\Miembro;
+use App\Models\Asistenciasalida;
+
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,7 +38,8 @@ class AsistenciaController extends Controller
     public function pdf(Request $request)
     {
         $asistencias = Asistencia::all();
-        $pdf = Pdf::loadView('asistencia.pdf', ['asistencias' => $asistencias]);
+        $asistenciasalidas = Asistenciasalida::pluck('fecha_salida', 'motivo_salida', 'id');
+        $pdf = Pdf::loadView('asistencia.pdf', ['asistencias' => $asistencias, 'asistenciasalidas' => $asistenciasalidas]);
         return $pdf->stream('asistencia.pdf');
     }
 

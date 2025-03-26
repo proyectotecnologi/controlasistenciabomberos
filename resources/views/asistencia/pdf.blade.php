@@ -15,8 +15,11 @@
             <tr>
                 <th>No</th>
 
-                <th>Fecha que marco asistencia</th>
+                <th>Fecha que marco asistencia Entrada</th>
                 <th>Nombre y apellido del miembro</th>
+                <th>Fecha y Hora que marco asistencia Salida</th>
+                <th>Motivo de la Salida</th>
+
             </tr>
         </thead>
         <tbody>
@@ -26,6 +29,14 @@
                 <td><?=$contador_de_asistencia++;?></td>
                 <td>{{ $asistencia->fecha }}</td>
                 <td>{{ $asistencia->miembro->nombre_apellido}}</td>
+
+                <td>
+                    @if(isset($asistenciasalidas[$asistencia->id]))
+                        {{ $asistenciasalidas[$asistencia->id] }}
+                    @else
+                        No disponible
+                    @endif
+                </td>
             </tr>
             @endforeach
         </tbody>

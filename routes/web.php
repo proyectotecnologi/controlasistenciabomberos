@@ -34,6 +34,8 @@ Route::resource(name: '/usuarios', controller: \App\Http\Controllers\UserControl
 
 Route::resource(name: '/asistencias', controller: \App\Http\Controllers\AsistenciaController::class)->middleware('can:asistencias');
 
+Route::resource(name: '/asistenciasalidas', controller: \App\Http\Controllers\AsistenciasalidaController::class)->middleware('can:asistenciasalidas');
+
 
 //Route::get('/miembros', function () { return view( view: 'miembros.index');})->middleware( middleware: 'auth');;
 

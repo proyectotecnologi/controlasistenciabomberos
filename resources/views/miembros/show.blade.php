@@ -126,8 +126,8 @@
                         </div>
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <a href="{{url('/miembros')}}" class="btn btn-danger">
-                                    Cancelar
+                                <a href="{{url('/miembros')}}" class="btn btn-danger" style="white-space: nowrap;">
+                                    Volver Atras
                                 </a>
                             </div>
                         </div>

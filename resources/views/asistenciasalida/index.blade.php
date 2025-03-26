@@ -2,86 +2,73 @@
 
 
 @section('content')
-
-<div class="content" style="margin-left: 20px">
-    <h1>Listado de asistencias</h1>
-
-    @if($message = Session::get('mensaje'))
-    <script>
-        Swal.fire({
-            title: "Registro exitoso",
-            text: "{{$message}}",
-            icon: "success"
-        });
-    </script>
-
-    @endif
-    <!--<div class="container-fluid">-->
+    <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card card-outline card-primary">
+                <div class="card">
                     <div class="card-header">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                Listado de asistencias
+                                Lista de Control de Asistencia Salida
                             </span>
 
-                            <div class="float-right">
-                                <a href="{{ route('asistencias.create') }}" class="btn btn-primary btn-sm float-right" data-placement="left">
-                                    <!--   <a href="{{ url('/asistencias/create')}}" class="btn btn-primary btn-sm float-right" data-placement="left">-->
-                                    Crear nueva asistencia
+                             <div class="float-right">
+                                <a href="{{ route('asistenciasalidas.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  Crear Asistencia
                                 </a>
-                            </div>
+                              </div>
                         </div>
                     </div>
                     @if ($message = Session::get('success'))
-                    <div class="alert alert-success m-4">
-                        <p>{{ $message }}</p>
-                    </div>
+                        <div class="alert alert-success m-4">
+                            <p>{{ $message }}</p>
+                        </div>
                     @endif
 
                     <div class="card-body bg-white">
                         <div class="table-responsive">
-                            <table id="example1" class="table table-bordered table-striped table-sm">
+                        <table id="example1" class="table table-bordered table-striped table-sm">
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        <th>Fecha Asistencia Ingreso</th>
                                         
-                                        <th>Nombre y apellido del miembro</th>
-                                        <th>Acciones</th>
+									<th >Fecha Salida</th>
+									<th >Motivo de la Salida</th>
+									<th >Nombres y Apellidos del Funcionario Policial</th>
+                                        <th style="text-align: center;">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $contador = 0; ?>
-                                    @foreach ($asistencias as $asistencia)
-                                    <tr>
-                                        <td><?php echo $contador = $contador + 1; ?></td>
-                                        <td>{{ $asistencia->fecha }}</td>
-                                        <td>{{ $asistencia->miembro->nombre_apellido}}</td>
-                                        <td style="text-align: center;">
-                                            <form action="{{ route('asistencias.destroy', $asistencia->id) }}" method="POST">
-                                                <a class="btn btn-sm btn-primary " href="{{ route('asistencias.show', $asistencia->id) }}"><i class="bi bi-eye"></i></a>
-                                                <a class="btn btn-sm btn-success" href="{{ route('asistencias.edit', $asistencia->id) }}"><i class="bi bi-pencil"></i></a>
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" onclick="return confirm('¿Esta seguro que desea eliminar este registro?')" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="bi bi-trash"></i></button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                    @foreach ($asistenciasalidas as $asistenciasalida)
+                                        <tr>
+                                            <td>{{ ++$i }}</td>
+                                            
+										<td >{{ $asistenciasalida->fecha_salida }}</td>
+										<td >{{ $asistenciasalida->motivo_salida }}</td>
+										<td >{{ $asistenciasalida->miembro->nombre_apellido }}</td>
+
+                                            <td style="text-align: center;">
+                                                <form action="{{ route('asistenciasalidas.destroy', $asistenciasalida->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('asistenciasalidas.show', $asistenciasalida->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('asistenciasalidas.edit', $asistenciasalida->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+                {!! $asistenciasalidas->withQueryString()->links() !!}
             </div>
         </div>
-    <!--</div>-->
-</div>
-
-<script>
+    </div>
+    <script>
     $(function() {
         $("#example1").DataTable({
             "pageLength": 10,

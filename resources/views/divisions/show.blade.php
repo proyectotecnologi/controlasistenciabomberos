@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <a href="{{url('/divisions')}}" class="btn btn-secondary">Cancelar</a>
+                                <a href="{{url('/divisions')}}" class="btn btn-secondary">Volver Atras</a>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,7 @@
 @extends('layouts.admin')
 
+
+
 @section('content')
     <section class="content container-fluid">
         <div class="">
@@ -7,14 +9,14 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">Editar la Asistencia de Ingreso</span>
+                        <span class="card-title">Editar la Asistencia de Salida</span>
                     </div>
                     <div class="card-body bg-white card-outline card-primary">
-                        <form method="POST" action="{{ route('asistencias.update', $asistencia->id) }}"  role="form" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('asistenciasalidas.update', $asistenciasalida->id) }}"  role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('asistencia.form')
+                            @include('asistenciasalida.form')
 
                         </form>
                     </div>

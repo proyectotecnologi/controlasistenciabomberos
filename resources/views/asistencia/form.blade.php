@@ -2,7 +2,7 @@
     <div class="col-md-8">
 
         <div class="form-group mb-2 mb20">
-            <label for="fecha" class="form-label">{{ __('Fecha') }}</label>
+            <label for="fecha" class="form-label">Fecha de Asistencia Ingreso</label>
             <input type="date" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', $asistencia?->fecha) }}" id="fecha" placeholder="Fecha">
             {!! $errors->first('fecha', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
@@ -10,6 +10,7 @@
         <div class="form-group mb-2 mb20">
             <label for="miembro_id" class="form-label">Miembros</label>
             <select name="miembro_id" class="form-control">
+            <option value="" disabled selected>Selecciona un miembro</option> <!-- Placeholder -->
                 @foreach($miembros as $id => $nombre)
                 <option value="{{$id}}" {{$asistencia->miembro_id == $id? 'selected' : '' }}>
                     {{$nombre}} <br><br> {{$id}}

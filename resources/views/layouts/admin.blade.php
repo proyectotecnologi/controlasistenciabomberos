@@ -235,7 +235,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <li class="nav-item">
               <a href="#" class="nav-link active">
                 <i class="nav-icon">
-                  <i class="bi bi-handbag-fill"></i>
+                  <i class="bi bi-suitcase-lg-fill"></i>
                 </i>
                 <p>
                   Division
@@ -296,26 +296,58 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <i class="bi bi-calendar2-date-fill"></i>
                 </i>
                 <p>
-                  Asistencias
+                  Asistencias Ingreso
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{url('asistencias/create')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Nueva asistencia</p>
+                    <i class="bi bi-clock-fill"></i>
+                    <p>Control Asistencia Ingreso</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{url('asistencias')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-card-checklist"></i>
                     <p>Listado de asistencias</p>
                   </a>
                 </li>
               </ul>
             </li>
             @endcan
+
+
+
+            @can('asistenciasalidas')
+            <li class="nav-item">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon">
+                  <i class="bi bi-calendar2-date-fill"></i>
+                </i>
+                <p>
+                  Asistencias Salida
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{url('asistenciasalidas/create')}}" class="nav-link">
+                    <i class="bi bi-clock-fill"></i>
+                    <p>Control Asistencia Salida</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{url('asistenciasalidas')}}" class="nav-link">
+                    <i class="bi bi-card-checklist"></i>
+                    <p>Listado de asistencias</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+           @endcan
+
+
 
             <li class="nav-item">
               <a href="#" class="nav-link active">
@@ -330,7 +362,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{url('asistencias/reportes')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-printer-fill"></i>
                     <p>asistencias</p>
                   </a>
                 </li>
@@ -350,7 +382,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{url('miembros/reportes')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-printer-fill"></i>
                     <p>miembros</p>
                   </a>
                 </li>
@@ -360,22 +392,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
             <li class="nav-item">
-
               <a class="nav-link" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                                       document.getElementById('logout-form').submit();"
                 style="background-color: #c52510">
                 <i class="nav-icon">
-                  <i class="bi bi-door-closed-fill"></i>
+                  <i class="bi bi-toggle-off"></i>
                 </i>
-
                 Cerrar Sesion
               </a>
-
               <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
               </form>
             </li>
+
+
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
