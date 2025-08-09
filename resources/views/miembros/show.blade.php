@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="content" style="margin-left: 20px">
-    <h1>Datos del miembro registrado</h1><br>
+    <h1>Datos del Funcionario Policial registrado</h1><br>
 
 
     <div class="row">
@@ -108,13 +108,13 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="form-group">
+                            <div class="form-group text-center">
                                 <label for="">Fotografia</label><br><br>
                                 @if($miembro->fotografia == '')
                                 @if($miembro->genero == 'Masculino')
                                 <img src="{{url('images/Hombre.png')}}" width="170px" alt="">
                                 @else
-                                <img src="{{url('images/Mujer.png')}}" width="170px" alt="">
+                                <img src="{{url('images/Mujer.jpg')}}" width="170px" alt="">
                                 @endif
                                 @else
                                 <center>

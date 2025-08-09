@@ -25,6 +25,8 @@ class AsistenciasalidaRequest extends FormRequest
 			'fecha_salida' => 'required',
 			'motivo_salida' => 'required|string',
 			'miembro_id' => 'required',
+			'asistencia_id' => 'required',
         ];
     }
+
 }

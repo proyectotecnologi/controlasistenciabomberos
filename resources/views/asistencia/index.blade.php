@@ -23,7 +23,7 @@
                     <div class="card-header">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
-                            <span id="card_title">
+                            <span id="card_title" style="font-size: 24px; font-weight: bold;">
                                 Listado de asistencias
                             </span>
 

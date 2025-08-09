@@ -9,7 +9,7 @@
 
 <body>
     <br><br>
-    <h1>Reporte de miembros</h1>
+    <h1 style="text-align: center;">Reporte de los Funcionarios Policiales de la Direccion Nacional de Bomberos </h1>
     <table id="example1" class="table table-bordered table-striped table-sm" border="1">
         <thead>
             <tr>

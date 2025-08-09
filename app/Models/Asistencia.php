@@ -37,5 +37,6 @@ class Asistencia extends Model
     {
         return $this->belongsTo(\App\Models\Miembro::class, 'miembro_id', 'id');
     }
+
     
 }

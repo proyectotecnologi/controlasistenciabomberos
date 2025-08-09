@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="content" style="margin-left: 20px">
-    <h1>Actualizar datos del miembro</h1><br>
+    <h1>Actualizar Datos del Funcionario Policial</h1><br>
 
 
     @foreach($errors->all() as $error)
@@ -76,7 +76,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="">Genero</label>
-                                            <select name="genero" class="form-control" id="">
+                                            <select name="genero" class="form-control" id="genero">
                                                 @if($miembro->genero == 'Masculino')
                                                 <option value="Masculino">Masculino</option>
                                                 <option value="Femenino">Femenino</option>
@@ -117,6 +117,10 @@
                                     </div>-->
                                 </div>
                             </div>
+
+                            <!-- El script que utilizaba sin incluir para fotografia con la camara es este
+
+
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Fotografia</label>
@@ -159,7 +163,38 @@
                                         document.getElementById('file').addEventListener('change', archivo, false);
                                     </script>
                                 </div>
+                            </div> -->
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Fotografía</label>
+
+                                    <input type="file" id="file" name="fotografia" class="form-control"><br>
+
+                                    <!-- Botones y video -->
+                                    <button type="button" class="btn btn-primary btn-sm mt-2" id="startCamera">Activar Cámara</button>
+                                    <video id="video" width="100%" autoplay style="display: none;"></video><br>
+                                    <button type="button" class="btn btn-success btn-sm mt-2" id="snap" style="display: none;">Tomar Foto</button>
+                                    <canvas id="canvas" style="display: none;"></canvas><br>
+
+                                    <center>
+                                        <output id="list">
+                                            @if($miembro->fotografia == '')
+                                            @if($miembro->genero == 'Masculino')
+                                            <img id="photo" src="{{url('images/Hombre.png')}}" width="170px" alt="">
+                                            @else
+                                            <img id="photo" src="{{url('images/Mujer.png')}}" width="170px" alt="">
+                                            @endif
+                                            @else
+                                            <img id="photo" src="{{asset('storage').'/'.$miembro->fotografia}}" width="170px" alt="">
+                                            @endif
+                                        </output>
+                                    </center>
+
+                                    <input type="hidden" name="fotografia_base64" id="fotografia_base64">
+                                </div>
                             </div>
+
                         </div>
                         <hr>
                         <div class="row">
@@ -176,6 +211,78 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const generoSelect = document.getElementById('genero');
+        const photo = document.getElementById('photo');
+        const fileInput = document.getElementById('file');
+        const inputBase64 = document.getElementById("fotografia_base64");
+
+        generoSelect.addEventListener('change', function() {
+            // Solo cambiar si no se ha cargado ni tomado una foto
+            if (!fileInput.files.length && !inputBase64.value) {
+                if (generoSelect.value === 'Masculino') {
+                    photo.src = "{{ url('images/Hombre.png') }}";
+                } else if (generoSelect.value === 'Femenino') {
+                    photo.src = "{{ url('images/Mujer.png') }}";
+                }
+            }
+        });
+
+        // Manejo de carga manual de archivo
+        fileInput.addEventListener('change', function(evt) {
+            const files = evt.target.files;
+            if (files && files[0] && files[0].type.match('image.*')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photo.src = e.target.result;
+                    inputBase64.value = ''; // Limpiar base64 si viene de archivo
+                };
+                reader.readAsDataURL(files[0]);
+            }
+        });
+
+        // Activar cámara y tomar foto
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById("snap");
+        const startCameraBtn = document.getElementById("startCamera");
+        let stream;
+
+        startCameraBtn.addEventListener("click", function() {
+            navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                })
+                .then(function(mediaStream) {
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.style.display = "block";
+                    snap.style.display = "inline-block";
+                })
+                .catch(function(err) {
+                    console.error("No se pudo acceder a la cámara: ", err);
+                });
+        });
+
+        snap.addEventListener("click", function() {
+            const context = canvas.getContext('2d');
+            canvas.width = 640;
+            canvas.height = 640;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+            photo.src = dataURL;
+            inputBase64.value = dataURL;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            video.style.display = "none";
+            snap.style.display = "none";
+        });
+    });
+</script>
+
 
 @endsection
 

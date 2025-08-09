@@ -16,8 +16,11 @@ return new class extends Migration
             $table->dateTime(column: 'fecha_salida');
             $table->string(column: 'motivo_salida', length: 255);
             $table->bigInteger(column: 'miembro_id')->unsigned();
+            $table->bigInteger(column: 'asistencia_id')->unsigned();
             $table->timestamps();
             $table->foreign(columns: 'miembro_id')->references(columns:'id')->on(table:'miembros')->onDelete(action: 'cascade');
+            $table->foreign(columns: 'asistencia_id')->references(columns:'id')->on(table:'asistencias')->onDelete(action: 'cascade');
+
         });
     }
 

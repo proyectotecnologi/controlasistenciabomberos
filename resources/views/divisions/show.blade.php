@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="content" style="margin-left: 20px">
-    <h1>Division: {{$division->nombre_division}}</h1><br>
+    <h1>Datos de la Division</h1><br>
 
 
     <div class="row">

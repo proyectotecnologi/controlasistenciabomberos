@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id();
-            $table->date(column: 'fecha');
+            $table->dateTime(column: 'fecha');
             $table->bigInteger(column: 'miembro_id')->unsigned();
             $table->timestamps();
             $table->foreign(columns: 'miembro_id')->references(columns:'id')->on(table:'miembros')->onDelete(action: 'cascade');

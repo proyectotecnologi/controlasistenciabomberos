@@ -14,8 +14,8 @@
         <thead class="thead">
             <tr>
                 <th>No</th>
-                <th>Fecha</th>
-                <th>Nombre y apellido del miembro</th>
+                <th>Fecha y Hora que Marco Asistencia Ingreso</th>
+                <th>Nombre y Apellido del Funcionario Policial</th>
             </tr>
         </thead>
         <tbody>

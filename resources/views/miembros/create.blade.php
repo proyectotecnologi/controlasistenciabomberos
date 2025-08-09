@@ -113,7 +113,8 @@
                                     </div>-->
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <!--Este era el codigo original para agregar una foto segun los videos de tutorial antes de agregar con la camara -->
+                            <!--<div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Fotografia</label>
                                     <input type="file" id="file" name="fotografia" class="form-control"><br>
@@ -140,6 +141,80 @@
                                         document.getElementById('file').addEventListener('change', archivo, false);
                                     </script>
                                 </div>
+                            </div>-->
+
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Fotografía</label>
+                                    <input type="file" id="file" name="fotografia" class="form-control"><br>
+
+                                    <!-- ✅ Botón para activar la cámara -->
+                                    <button type="button" class="btn btn-primary btn-sm mt-2" id="startCamera">Activar Cámara</button>
+
+                                    <!-- Video desactivado inicialmente -->
+                                    <video id="video" width="100%" autoplay style="display: none;"></video>
+                                    <br>
+                                    <button type="button" class="btn btn-success btn-sm mt-2" id="snap" style="display: none;">Tomar Foto</button>
+
+                                    <canvas id="canvas" style="display: none;"></canvas>
+                                    <br>
+                                    <img id="photo" src="" class="mt-2" width="100%" />
+
+                                    <input type="hidden" name="fotografia_base64" id="fotografia_base64">
+                                </div>
+
+                                <center><output id="list"></output></center>
+
+                                <script>
+                                    const video = document.getElementById('video');
+                                    const canvas = document.getElementById('canvas');
+                                    const photo = document.getElementById('photo');
+                                    const snap = document.getElementById("snap");
+                                    const inputBase64 = document.getElementById("fotografia_base64");
+                                    const startCameraBtn = document.getElementById("startCamera");
+
+                                    // ✅ Activar cámara solo cuando se presiona el botón
+                                    startCameraBtn.addEventListener("click", function() {
+                                        navigator.mediaDevices.getUserMedia({
+                                                video: true,
+                                                audio: false
+                                            })
+                                            .then(function(stream) {
+                                                video.srcObject = stream;
+                                                video.style.display = "block"; // mostrar video
+                                                snap.style.display = "inline-block"; // mostrar botón de tomar foto
+                                            })
+                                            .catch(function(err) {
+                                                console.log("No se pudo acceder a la cámara: ", err);
+                                            });
+                                    });
+
+                                    // ✅ Capturar imagen desde la cámara
+                                    snap.addEventListener("click", function() {
+                                        canvas.width = video.videoWidth;
+                                        canvas.height = video.videoHeight;
+                                        canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+                                        const imgData = canvas.toDataURL("image/png");
+                                        photo.src = imgData;
+                                        inputBase64.value = imgData;
+                                    });
+
+                                    // ✅ Imagen subida manualmente
+                                    document.getElementById('file').addEventListener('change', function(evt) {
+                                        const files = evt.target.files;
+                                        for (let i = 0, f; f = files[i]; i++) {
+                                            if (!f.type.match('image.*')) continue;
+                                            const reader = new FileReader();
+                                            reader.onload = function(e) {
+                                                const imgData = e.target.result;
+                                                photo.src = imgData;
+                                                inputBase64.value = imgData;
+                                            };
+                                            reader.readAsDataURL(f);
+                                        }
+                                    }, false);
+                                </script>
                             </div>
                         </div>
                         <hr>
@@ -157,5 +232,81 @@
         </div>
     </div>
 </div>
+
+
+<!-- Botón para activar la cámara 
+<button type="button" class="btn btn-primary btn-sm mt-2" id="startCamera">Activar Cámara</button>-->
+
+<!-- Vista previa de cámara -->
+<video id="video" width="100%" autoplay style="display: none;"></video>
+<br>
+
+<!-- Botón para tomar foto -->
+<button type="button" class="btn btn-success btn-sm mt-2" id="snap" style="display: none;">Tomar Foto</button>
+
+<!-- Canvas oculto para procesar imagen -->
+<canvas id="canvas" style="display: none;"></canvas>
+<br>
+
+<!-- Imagen capturada -->
+<img id="photo" src="" class="mt-2" width="100%" />
+
+<!-- Resultado en base64 -->
+<input type="hidden" name="fotografia_base64" id="fotografia_base64">
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photo = document.getElementById('photo');
+        const snap = document.getElementById("snap");
+        const inputBase64 = document.getElementById("fotografia_base64");
+        const startCameraBtn = document.getElementById("startCamera");
+
+        // Tamaño deseado de la imagen final
+        const WIDTH = 640;
+        const HEIGHT = 640;
+
+        let stream; // Guardar el stream para poder detenerlo luego si quieres
+
+        // Activar la cámara solo cuando se presione el botón
+        startCameraBtn.addEventListener("click", function() {
+            navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                })
+                .then(function(mediaStream) {
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.style.display = "block";
+                    snap.style.display = "inline-block";
+                })
+                .catch(function(err) {
+                    console.error("No se pudo acceder a la cámara: ", err);
+                });
+        });
+
+        // Capturar la foto
+        snap.addEventListener("click", function() {
+            const context = canvas.getContext('2d');
+
+            canvas.width = WIDTH;
+            canvas.height = HEIGHT;
+
+            context.drawImage(video, 0, 0, WIDTH, HEIGHT);
+
+            const dataURL = canvas.toDataURL('image/png');
+
+            photo.src = dataURL;
+            inputBase64.value = dataURL;
+
+            // Opcional: detener la cámara después de tomar la foto
+            // stream.getTracks().forEach(track => track.stop());
+            // video.style.display = "none";
+            // snap.style.display = "none";
+        });
+    });
+</script>
+
 
 @endsection

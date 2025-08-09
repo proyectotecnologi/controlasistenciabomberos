@@ -4,13 +4,19 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\MiembroController;
+use App\Http\Controllers\AsistenciasalidaController;
 /*Route::get('/', function () {
     return view(view: 'index');
 })->middleware(middleware: 'auth');*/
 
-Route::get('/asistencias/reportes', [AsistenciaController::class, 'reportes'])->name('reportes');
-Route::get('/asistencias/pdf', [AsistenciaController::class, 'pdf'])->name('pdf');
-Route::get('/asistencias/pdf_fechas', [AsistenciaController::class, 'pdf_fechas'])->name('pdf_fechas');
+Route::get('/asistenciasalidas/reportes', [AsistenciasalidaController::class, 'reportes'])->name('reportes');
+Route::get('/asistenciasalidas/pdf', [AsistenciasalidaController::class, 'pdf'])->name('pdf');
+Route::get('/asistenciasalidas/pdf_fechas', [AsistenciasalidaController::class, 'pdf_fechas'])->name('pdf_fechas');
+
+
+//Route::get('/asistencias/reportes', [AsistenciaController::class, 'reportes'])->name('reportes');
+//Route::get('/asistencias/pdf', [AsistenciaController::class, 'pdf'])->name('pdf');
+//Route::get('/asistencias/pdf_fechas', [AsistenciaController::class, 'pdf_fechas'])->name('pdf_fechas');
 Route::get('/miembros/reportes', [MiembroController::class, 'reportes'])->name('reportesmiembros');
 Route::get('/miembros/pdf', [MiembroController::class, 'pdf'])->name('pdfmiembros');
 Route::get('/miembros/pdf_fechas', [MiembroController::class, 'pdf_fechas'])->name('pdf_fechas_miembros');

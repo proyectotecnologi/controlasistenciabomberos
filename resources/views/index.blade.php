@@ -34,7 +34,7 @@
 
                     @endforeach
                     <h3><?= $contador_de_miembro; ?></h3>
-                    <p>Miembros</p>
+                    <p>Funcionarios Policiales</p>
                 </div>
                 <div class="icon">
                     <i class="bi bi-person-plus-fill"></i>
@@ -73,12 +73,32 @@
 
                     @endforeach
                     <h3><?= $contador_de_asistencias; ?></h3>
-                    <p>Marcado de Asistencias</p>
+                    <p>Marcado de Asistencias de Ingreso</p>
                 </div>
                 <div class="icon">
                 <i class="bi bi-clock-fill"></i>
                 </div>
                 <a href="{{url('asistencias')}}" class="small-box-footer" style="margin-top: 20px">Más información <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3">
+            <div class="small-box bg-danger" style="height: 160px">
+                <div class="inner">
+                    <?php $contador_de_asistenciasalidas = 0; ?>
+                    @foreach($asistenciasalidas as $asistenciasalida)
+                    <?php $contador_de_asistenciasalidas = $contador_de_asistenciasalidas + 1; ?>
+
+                    @endforeach
+                    <h3><?= $contador_de_asistenciasalidas; ?></h3>
+                    <p>Marcado de Asistencia de Salidas</p>
+                </div>
+                <div class="icon">
+                <i class="bi bi-clock"></i>
+                </div>
+                <a href="{{url('asistenciasalidas')}}" class="small-box-footer" style="margin-top: 20px">Más información <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>
         </div>

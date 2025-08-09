@@ -30,7 +30,7 @@ class AsistenciaController extends Controller
     }
 
 
-    public function reportes(Request $request): View
+    /*public function reportes(Request $request): View
     {
         return view('asistencia.reportes');
     }
@@ -38,8 +38,7 @@ class AsistenciaController extends Controller
     public function pdf(Request $request)
     {
         $asistencias = Asistencia::all();
-        $asistenciasalidas = Asistenciasalida::pluck('fecha_salida', 'motivo_salida', 'id');
-        $pdf = Pdf::loadView('asistencia.pdf', ['asistencias' => $asistencias, 'asistenciasalidas' => $asistenciasalidas]);
+        $pdf = Pdf::loadView('asistencia.pdf', ['asistencias' => $asistencias]);
         return $pdf->stream('asistencia.pdf');
     }
 
@@ -57,7 +56,7 @@ class AsistenciaController extends Controller
         $pdf = Pdf::loadView('asistencia.pdf_fechas', ['asistencias' => $asistencias]);
         return $pdf->stream('asistencia.pdf_fechas');
         //return view('asistencia.pdf_fechas', ['asistencias' => $asistencias]);
-    }
+    }*/
 
     /**
      * Show the form for creating a new resource.
@@ -77,7 +76,7 @@ class AsistenciaController extends Controller
         Asistencia::create($request->validated());
 
         return Redirect::route('asistencias.index')
-        ->with('mensaje', 'Se registro a la asistencia de la manera correcta');
+        ->with('mensaje', 'Se registro la asistencia de Ingreso de la manera correcta');
     }
 
     /**
@@ -114,6 +113,6 @@ class AsistenciaController extends Controller
     {
         Asistencia::find($id)->delete();
         return Redirect::route('asistencias.index')
-        ->with('mensaje', 'Se elimino al miembro de la manera correcta');
+        ->with('mensaje', 'Se elimino el registro de la asistencia de ingreso de la manera correcta');
     }
 }

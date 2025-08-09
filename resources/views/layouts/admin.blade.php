@@ -217,13 +217,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{url('usuarios/create')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-person-plus-fill"></i>
                     <p>Nuevo usuario</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{url('usuarios')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-person-vcard"></i>
                     <p>Listado de usuarios</p>
                   </a>
                 </li>
@@ -245,13 +245,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{url('divisions/create')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-display"></i>
                     <p>Nueva division</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{url('divisions')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="bi bi-clipboard2-fill"></i>
                     <p>Listado de division</p>
                   </a>
                 </li>
@@ -267,21 +267,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <i class="bi bi-people-fill"></i>
                 </i>
                 <p>
-                  Miembros
+                  Funcionarios Policiales
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{url('miembros/create')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Nuevo miembro</p>
+                    <i class="bi bi-person-plus-fill"></i>
+                    <p>Nuevo Funcionario Policial</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{{url('miembros')}}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Listado de miembro</p>
+                    <i class="bi bi-person-vcard"></i>
+                    <p>Listado de Funcionarios policiales</p>
                   </a>
                 </li>
               </ul>
@@ -345,11 +345,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </li>
               </ul>
             </li>
-           @endcan
+            @endcan
 
 
 
-            <li class="nav-item">
+            <!--<li class="nav-item">
               <a href="#" class="nav-link active">
                 <i class="nav-icon">
                   <i class="bi bi-printer"></i>
@@ -367,15 +367,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </a>
                 </li>
               </ul>
-            </li>
+            </li>-->
+
 
             <li class="nav-item">
-              <a href="#" class="nav-link active">
+              <a href="#" class="nav-link active" style="background-color: #17a2b8; color: white;">
                 <i class="nav-icon">
                   <i class="bi bi-printer"></i>
                 </i>
                 <p>
-                  Reportes de miembros
+                  Reportes de asistencia
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{url('asistenciasalidas/reportes')}}" class="nav-link">
+                    <i class="bi bi-printer-fill"></i>
+                    <p>asistencias</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+
+
+            <li class="nav-item">
+              <a href="#" class="nav-link active" style="background-color: #17a2b8; color: white;">
+                <i class="nav-icon">
+                  <i class="bi bi-printer"></i>
+                </i>
+                <p>
+                  Reporte de Funcionarios Policiales
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -397,7 +420,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                       document.getElementById('logout-form').submit();"
                 style="background-color: #c52510">
                 <i class="nav-icon">
-                  <i class="bi bi-toggle-off"></i>
+                  <i class="bi bi-power"></i>
                 </i>
                 Cerrar Sesion
               </a>

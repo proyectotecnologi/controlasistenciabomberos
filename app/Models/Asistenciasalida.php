@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property $fecha_salida
  * @property $motivo_salida
  * @property $miembro_id
+ * @property $asistencia_id
  * @property $created_at
  * @property $updated_at
  *
+ * @property Asistencia $asistencia
  * @property Miembro $miembro
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
@@ -28,9 +30,17 @@ class Asistenciasalida extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['fecha_salida', 'motivo_salida', 'miembro_id'];
+    protected $fillable = ['fecha_salida', 'motivo_salida', 'miembro_id', 'asistencia_id'];
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function asistencia()
+    {
+        return $this->belongsTo(\App\Models\Asistencia::class, 'asistencia_id', 'id');
+    }
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

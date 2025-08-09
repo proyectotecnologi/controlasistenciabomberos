@@ -15,28 +15,34 @@
             <tr>
                 <th>No</th>
 
-                <th>Fecha que marco asistencia Entrada</th>
-                <th>Nombre y apellido del miembro</th>
-                <th>Fecha y Hora que marco asistencia Salida</th>
+                <th>Fecha y Hora que Marco Asistencia Ingreso</th>
+                <th>Nombre y Apellido del Funcionario Policial</th>
+                <th>Fecha y Hora que Marco Asistencia Salida</th>
                 <th>Motivo de la Salida</th>
 
             </tr>
         </thead>
         <tbody>
-            <?php $contador_de_asistencia = 1;?>
+            <?php $contador_de_asistencia = 1; ?>
             @foreach ($asistencias as $asistencia)
             <tr>
-                <td><?=$contador_de_asistencia++;?></td>
+                <td><?= $contador_de_asistencia++; ?></td>
                 <td>{{ $asistencia->fecha }}</td>
                 <td>{{ $asistencia->miembro->nombre_apellido}}</td>
-
                 <td>
-                    @if(isset($asistenciasalidas[$asistencia->id]))
-                        {{ $asistenciasalidas[$asistencia->id] }}
-                    @else
-                        No disponible
-                    @endif
-                </td>
+                        @if ($asistencia->asistenciasalida)
+                            {{ $asistencia->asistenciasalida->fecha_salida }}
+                        @else
+                            No disponible
+                        @endif
+                    </td>
+                    <td>
+                        @if ($asistencia->asistenciasalida)
+                            {{ $asistencia->asistenciasalida->motivo_salida }}
+                        @else
+                            No disponible
+                        @endif
+                    </td>
             </tr>
             @endforeach
         </tbody>

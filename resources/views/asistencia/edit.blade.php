@@ -7,7 +7,7 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">Editar la Asistencia de Ingreso</span>
+                        <span class="card-title" style="font-size: 24px; font-weight: bold;">Editar la Asistencia de Ingreso</span>
                     </div>
                     <div class="card-body bg-white card-outline card-primary">
                         <form method="POST" action="{{ route('asistencias.update', $asistencia->id) }}"  role="form" enctype="multipart/form-data">

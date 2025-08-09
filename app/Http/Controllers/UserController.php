@@ -31,17 +31,45 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      */
 
-    protected function validator(array $data)
+    /**protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed', 
+            'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/'],
+        ]);
+    }*/
+    protected function validator(array $data, $id = null)
+    {
+        $emailRule = ['required', 'string', 'email', 'max:255'];
+        if ($id) {
+            $emailRule[] = 'unique:users,email,' . $id;
+        } else {
+            $emailRule[] = 'unique:users';
+        }
+        $passwordRule = [
+            $id ? 'nullable' : 'required', // En update, la contraseña puede ser opcional
+            'string',
+            'min:8',
+            'confirmed',
+            'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/'
+        ];
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => $emailRule,
+            'password' => $passwordRule,
         ]);
     }
 
     public function store(Request $request)
     {
+        $this->validator($request->all())
+            ->setCustomMessages([
+                'password.regex' => 'La contraseña es obligatorio, minimo 8 caracteres, debe 
+                 contener al menos una mayúscula, una minúscula, un número y un carácter especial.',
+            ])
+            ->validate();
         $usuario = new User();
         $usuario->name = $request->name;
         $usuario->email = $request->email;
@@ -76,8 +104,13 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    /**public function update(Request $request, $id)
     {
+        $this->validator($request->all())
+            ->setCustomMessages([
+                'password.regex' => 'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial.',
+            ])
+            ->validate();
         $usuario = User::findOrFail($id);
         $usuario->name = $request->name;
         $usuario->email = $request->email;
@@ -88,6 +121,33 @@ class UserController extends Controller
         }
         $usuario->save();
         return redirect()->route(route: 'usuarios.index')->with('mensaje', 'Se actualizo el usuario de la manera correcta');
+    }*/
+
+    public function update(Request $request, $id)
+    {
+        $this->validator($request->all(), $id)
+            ->setCustomMessages([
+                'password.regex' => 'La contraseña debe contener al menos una mayúscula, 
+                 una minúscula, un número y un carácter especial.',
+            ])
+            ->validate();
+
+        $usuario = User::findOrFail($id);
+        $usuario->name = $request->name;
+        $usuario->email = $request->email;
+
+        // Solo si se llenó el campo password, se actualiza
+        if ($request->filled('password')) {
+            $usuario->password = Hash::make($request['password']);
+        }
+
+        if ($request->hasFile('fotografia')) {
+            Storage::delete('public/' . $usuario->fotografia);
+            $usuario->fotografia = $request->file('fotografia')->store('fotografias usuarios', 'public');
+        }
+
+        $usuario->save();
+        return redirect()->route('usuarios.index')->with('mensaje', 'Se actualizó el usuario de la manera correcta');
     }
 
     /**

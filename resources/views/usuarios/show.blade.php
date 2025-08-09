@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group text-center">
                                     <label for="">Fotografia</label>            
                                     <center>
                                         <img src="{{asset('storage').'/'.$usuario->fotografia}}" width="170px" alt="">

@@ -17,7 +17,7 @@
                 <div class="card-body bg-white card-outline card-primary">
 
                     <div class="form-group mb-2 mb20">
-                        <strong>Fecha:</strong>
+                        <strong>Fecha y Hora de Ingreso:</strong>
                         {{ $asistencia->fecha }}
                     </div>
                     <div class="form-group mb-2 mb20">

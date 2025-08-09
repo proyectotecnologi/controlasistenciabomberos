@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="content" style="margin-left: 20px">
-    <h1>Reporte de miembros</h1>
+    <h1 style="text-align: center;">Reporte de los Funcionarios Policiales de la Direccion Nacional de Bomberos</h1>
 
     @if($message = Session::get('mensaje'))
     <script>
