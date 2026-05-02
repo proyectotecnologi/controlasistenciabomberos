@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asignacion;
 use App\Models\Miembro;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -11,14 +13,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+
 
 class MiembroController extends Controller
 {
    public function index()
    {
-      $miembros = Miembro::all();
-      return view('miembros.index', ['miembros' => $miembros]);
+      $m = Miembro::all();
+
+      $miembros = Miembro::with('asignacion')->get();
+      // dd($miembros);
+      return view('miembros.index', compact('miembros'));
    }
+
 
    public function reportes(request $request): View
    {
@@ -55,24 +63,19 @@ class MiembroController extends Controller
 
    public function store(Request $request)
    {
-      //$miembro = request()->all();
-      //return response()->json($miembro);
       $request->validate([
          'grado' => 'required',
          'cargo' => 'required',
          'nombre_apellido' => 'required',
-         'ci' => 'required',
+         'ci' => 'required|unique:miembros,ci',
          'direccion' => 'required',
          'telefono' => 'required',
          'fecha_de_nacimiento' => 'required',
-         'email' => 'required',
+         'email' => 'required|email|unique:users,email',
          'division_o_dependencia' => 'required',
-         //'fecha_ingreso' => 'required',
       ]);
 
-
       $miembro = new Miembro();
-
       $miembro->grado = $request->grado;
       $miembro->cargo = $request->cargo;
       $miembro->nombre_apellido = $request->nombre_apellido;
@@ -82,49 +85,56 @@ class MiembroController extends Controller
       $miembro->fecha_de_nacimiento = $request->fecha_de_nacimiento;
       $miembro->genero = $request->genero;
       $miembro->email = $request->email;
-      $miembro->estado = $request->estado;
+      $miembro->estado = $request->estado ? 1 : 0;
       $miembro->division_o_dependencia = $request->division_o_dependencia;
+      $miembro->fecha_ingreso = date('Y-m-d');
 
+      // ============= GUARDAR FOTOGRAFÍA =============
+      $fotografiaPath = null;
 
-      // Estas 2 filas reemplazamos por todo ese otro if y elseif
-      /*if ($request->hasFile(key: 'fotografia')) {
-         $miembro->fotografia = $request->file(key: 'fotografia')->store(path: 'fotografias miembros', options: 'public');
-      }*/
-
+      // 1. Si viene imagen en base64 (desde cámara web)
       if ($request->has('fotografia_base64') && $request->fotografia_base64 !== '') {
          $base64 = $request->input('fotografia_base64');
 
          if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
             $image = substr($base64, strpos($base64, ',') + 1);
             $image = base64_decode($image);
-            $extension = strtolower($type[1]); // jpg, png, etc.
-            //$fileName = 'foto_' . time() . '.' . $extension;
+            $extension = strtolower($type[1]);
             $fileName = Str::random(40) . '.' . $extension;
-            $path = public_path('storage/fotografias_miembros/' . $fileName);
 
-            // Asegúrate de que el directorio exista
+            // Guardar en storage/app/public/fotografias_usuarios/
+            $path = storage_path('app/public/fotografias_usuarios/' . $fileName);
+
             if (!file_exists(dirname($path))) {
                mkdir(dirname($path), 0755, true);
             }
 
             file_put_contents($path, $image);
-
-            // Guardar solo el path relativo al storage
-            $miembro->fotografia = 'fotografias_miembros/' . $fileName;
+            $fotografiaPath = 'fotografias_usuarios/' . $fileName;
          }
       }
-
       // 2. Si se sube archivo manualmente
-      elseif ($request->hasFile(key: 'fotografia')) {
-         $miembro->fotografia = $request->file(key: 'fotografia')->store(path: 'fotografias_miembros', options: 'public');
+      elseif ($request->hasFile('fotografia')) {
+         $fotografiaPath = $request->file('fotografia')->store('fotografias_usuarios', 'public');
       }
 
-      //$miembro->fotografia = $request->fotografia;
-      //$miembro->fecha_ingreso = $request->fecha_ingreso;
-      $miembro->fecha_ingreso = date($format = 'Y-m-d');
+      $miembro->fotografia = $fotografiaPath;
       $miembro->save();
 
-      return redirect()->route(route: 'miembros.index')->with('mensaje', 'Se registro al funcionario policial de la manera correcta');
+      // ============= CREAR USUARIO REUTILIZANDO LA MISMA FOTO =============
+      $user = User::create([
+         'name' => $request->nombre_apellido,
+         'email' => $request->email,
+         'password' => Hash::make($request->ci),
+         'fotografia' => $fotografiaPath, // Misma foto del miembro
+         'fecha_ingreso' => date('Y-m-d'),
+         'estado' => 1,
+      ]);
+
+      $user->assignRole('Funcionario');
+
+      return redirect()->route('miembros.index')
+         ->with('mensaje', 'Se registró al funcionario policial de manera correcta');
    }
 
    public function show($id)
@@ -152,10 +162,9 @@ class MiembroController extends Controller
          'fecha_de_nacimiento' => 'required',
          'email' => 'required',
          'division_o_dependencia' => 'required',
-         //'fecha_ingreso' => 'required',
       ]);
 
-      $miembro = Miembro::find($id);
+      $miembro = Miembro::findOrFail($id);
 
       $miembro->grado = $request->grado;
       $miembro->cargo = $request->cargo;
@@ -166,52 +175,73 @@ class MiembroController extends Controller
       $miembro->fecha_de_nacimiento = $request->fecha_de_nacimiento;
       $miembro->genero = $request->genero;
       $miembro->email = $request->email;
-      //$miembro->estado = $request->estado;
+      $miembro->estado = $request->estado ? 1 : 0;
       $miembro->division_o_dependencia = $request->division_o_dependencia;
 
-      /* El Script original con el que agregaba imagen sin tomar una fotografia desde la camara era esta: 
-
-      if ($request->hasFile(key: 'fotografia')) {
-         Storage::delete(paths: 'public/' . $miembro->fotografia);
-         $miembro->fotografia = $request->file(key: 'fotografia')->store(path: 'fotografias miembros', options: 'public');
-      }*/
+      // =================== FOTOGRAFÍA ===================
+      $fotografiaPath = $miembro->fotografia;
 
       if ($request->filled('fotografia_base64')) {
-         // Si viene desde la cámara (base64)
-         if ($miembro->fotografia && Storage::exists('public/' . $miembro->fotografia)) {
-            Storage::delete('public/' . $miembro->fotografia);
+         // Si hay foto anterior, borrarla
+         if ($fotografiaPath && Storage::exists('public/' . $fotografiaPath)) {
+            Storage::delete('public/' . $fotografiaPath);
          }
 
-         $image = str_replace('data:image/png;base64,', '', $request->fotografia_base64);
-         $image = str_replace(' ', '+', $image);
-         $imageName = 'fotografias_miembros/' . Str::random(40) . '.png';
-         Storage::disk('public')->put($imageName, base64_decode($image));
-         $miembro->fotografia = $imageName;
+         $base64 = $request->fotografia_base64;
+         if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
+            $image = substr($base64, strpos($base64, ',') + 1);
+            $image = base64_decode($image);
+            $extension = strtolower($type[1]);
+            $fileName = 'fotografias_usuarios/' . Str::random(40) . '.' . $extension;
+            Storage::disk('public')->put($fileName, $image);
+            $fotografiaPath = $fileName;
+         }
       } elseif ($request->hasFile('fotografia')) {
-         // Si se subió una imagen desde la computadora
-         if ($miembro->fotografia && Storage::exists('public/' . $miembro->fotografia)) {
-            Storage::delete('public/' . $miembro->fotografia);
+         if ($fotografiaPath && Storage::exists('public/' . $fotografiaPath)) {
+            Storage::delete('public/' . $fotografiaPath);
          }
 
          $file = $request->file('fotografia');
-         $imageName = 'fotografias_miembros/' . Str::random(40) . '.' . $file->getClientOriginalExtension();
-         Storage::disk('public')->put($imageName, file_get_contents($file));
-         $miembro->fotografia = $imageName;
-      } else {
-         // Si no se subió una nueva imagen y la fotografía actual es una predeterminada, actualizar según el género
-         if (in_array($miembro->fotografia, ['images/Mujer.png', 'images/Hombre.png'])) {
-            $miembro->fotografia = $request->genero == 'Femenino' ? 'images/Mujer.png' : 'images/Hombre.png';
-         }
+         $fileName = 'fotografias_usuarios/' . Str::random(40) . '.' . $file->getClientOriginalExtension();
+         Storage::disk('public')->put($fileName, file_get_contents($file));
+         $fotografiaPath = $fileName;
       }
+
+      $miembro->fotografia = $fotografiaPath;
       $miembro->save();
-      return redirect()->route(route: 'miembros.index')->with('mensaje', 'Se actualizo datos de funcionario policial de la manera correcta');
+
+      return redirect()->route('miembros.index')
+         ->with('mensaje', 'Se actualizaron los datos del funcionario correctamente');
    }
+
+
+   // public function destroy($id)
+   // {
+   //    $miembro = Miembro::find($id);
+   //    Storage::delete(paths: 'public/' . $miembro->fotografia);
+   //    Miembro::destroy($id);
+   //    return redirect()->route(route: 'miembros.index')->with('mensaje', 'Se elimino datos del funcionario policial de la manera correcta');
+   // }
 
    public function destroy($id)
    {
-      $miembro = Miembro::find($id);
-      Storage::delete(paths: 'public/' . $miembro->fotografia);
-      Miembro::destroy($id);
-      return redirect()->route(route: 'miembros.index')->with('mensaje', 'Se elimino datos del funcionario policial de la manera correcta');
+      $miembro = Miembro::findOrFail($id);
+
+      if ($miembro->fotografia && Storage::exists('public/' . $miembro->fotografia)) {
+         Storage::delete('public/' . $miembro->fotografia);
+      }
+
+      $user = User::where('email', $miembro->email)->first();
+      if ($user) {
+         if ($user->fotografia && Storage::exists('public/' . $user->fotografia)) {
+            Storage::delete('public/' . $user->fotografia);
+         }
+         $user->delete();
+      }
+
+      $miembro->delete();
+
+      return redirect()->route('miembros.index')
+         ->with('mensaje', 'Se eliminaron los datos del funcionario policial y su usuario asociado correctamente');
    }
 }

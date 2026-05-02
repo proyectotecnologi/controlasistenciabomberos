@@ -13,11 +13,8 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $divisions = Division::all();
-        $miembros = Miembro::all();
-        $usuarios = User::all();
-        $asistencias = Asistencia::all();
-        $asistenciasalidas = Asistenciasalida::all();
-        return view('index', ['divisions' => $divisions, 'miembros' => $miembros, 'usuarios' => $usuarios, 'asistencias'=>$asistencias, 'asistenciasalidas'=>$asistenciasalidas]);
+       
+
+        return view('welcome');
     }
 }
